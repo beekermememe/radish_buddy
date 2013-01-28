@@ -1,8 +1,8 @@
 class AppDelegate
-  attr_accessor :configuration_data
+
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-    @configuration_data = {}
+
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     tabbar = UITabBarController.alloc.init
     table_view_controller = MenuTableViewController.alloc.init

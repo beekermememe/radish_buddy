@@ -20,6 +20,12 @@ class MenuTableViewController < UITableViewController
     # e.g. self.myOutlet = nil
   end
 
+
+  def set_configuration_data(data)
+    @configuration_data = data
+    view.reloadData
+  end
+
   def shouldAutorotateToInterfaceOrientation(interfaceOrientation)
     interfaceOrientation == UIInterfaceOrientationPortrait
   end
@@ -96,16 +102,24 @@ class MenuTableViewController < UITableViewController
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
 
-    puts "#{self.configuration_data.inspect}}"
+    puts "-- #{self.configuration_data.inspect}"
     if Menu.items[indexPath.row][:tvc] == "ConfigurationTableViewController"
       controller = Formotion::FormableController.alloc.initWithModel(Sysconfig.new("","",self))
       self.navigationController.pushViewController(controller, animated:true)
     elsif Menu.items[indexPath.row][:tvc] == "MoviesTableViewController"
+      controller = MoviesTableViewController.alloc.init
+      #controller.setconfig(self.configuration_data)
+      self.navigationController.pushViewController(controller, animated:true)
+    elsif Menu.items[indexPath.row][:tvc] == "ShowsTableViewController"
+      controller = ShowsTableViewController.alloc.init
+      #controller.setconfig(self.configuration_data)
+      self.navigationController.pushViewController(controller, animated:true)
+    else
       if self.configuration_data.nil? || self.configuration_data == {}
         alert_no_config
       else
-        controller = MoviesTableViewController.allot.init
-        controller.setconfig(self.configuration_data)
+        controller = MoviesTableViewController.alloc.init
+        #controller.setconfig(self.configuration_data)
         self.navigationController.pushViewController(controller, animated:true)
       end
     end

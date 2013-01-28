@@ -1,4 +1,4 @@
-class MoviesTableViewController < UITableViewController
+class SingleMovieTableViewController < UITableViewController
   def viewDidLoad
     super
     # Uncomment the following line to preserve selection between presentations.
@@ -7,15 +7,18 @@ class MoviesTableViewController < UITableViewController
 
     # Uncomment the following line to display an Edit button in the navigation
     # bar for this view controller.
-    @movies = []
-    Dispatch::Queue.concurrent('mc-data').async {
-      movies_string = File.read("#{App.resources_path}/movies.json")
-      @movies = BW::JSON.parse(movies_string).map do |movie|
-        a = movie.dup
-        a
-      end
-      view.reloadData
-    }
+
+    # self.navigationItem.rightBarButtonItem = self.editButtonItem
+    @movie_values_to_show = [
+      "is_locked",
+      "description",
+      "is_parental_locked",
+      "rating",
+      "poster_url",
+      "slug"
+    ]
+
+    self.navigationItem.title = @movie.nil? ? "" : @movie["name"]
   end
 
   def viewDidUnload
@@ -23,6 +26,24 @@ class MoviesTableViewController < UITableViewController
 
     # Release any retained subviews of the main view.
     # e.g. self.myOutlet = nil
+  end
+
+
+  def has_thumbnail(thumbnail)
+    !thumbnail.nil? && (thumbnail.include?("jpg") || thumbnail.include?("png") || thumbnail.include?("gif"))
+  end
+
+  def is_locked(locked)
+    (!locked.nil? && (locked == "true" || locked == "locked"))
+  end
+
+  def is_p_locked(locked)
+    (!locked.nil? && (locked == "true" || locked == "locked"))
+  end
+
+  def set_movie(movie)
+    @movie = movie
+    view.reloadData
   end
 
   def shouldAutorotateToInterfaceOrientation(interfaceOrientation)
@@ -38,30 +59,37 @@ class MoviesTableViewController < UITableViewController
 
   def tableView(tableView, numberOfRowsInSection:section)
     # Return the number of rows in the section.
-    @movies.nil? ? 0 : @movies.count
+    @movie_values_to_show.nil? ? 0 : @movie_values_to_show.count
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
+
+
     cellIdentifier = self.class.name
     cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)
+    # Configure the cell...
     unless cell
-        cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
+      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
     end
-    movie = @movies[indexPath.row]
-    if movie['is_locked'] == true || movie['is_locked'] == "true"
-      locked = "locked"
+    value = nil
+    key =  @movie_values_to_show[indexPath.row]
+    if @movie.nil?
+      value = ""
+    elsif key == "poster_url"
+      ht = has_thumbnail(@movie["images"]["poster_url"])
+      value = "#{ht == true ? "#{@movie['images']['poster_url']}" : "NO POSTER"}"
+    elsif key == "is_locked"
+      lk = is_locked(@movie[key])
+      value = "#{lk == true ? "LOCKED" : "UNLOCKED"}"
+    elsif key == "is_parental_locked"
+      lk = is_p_locked(@movie[key])
+      value = "#{lk == true ? "PARENTAL LOCKED" : "PARENTAL UNLOCKED"}"
+    elsif @movie[key].nil? || @movie[key] == ""
+      value = "#{key} is blank"
     else
-      locked = "unlocked"
+      value = "#{key}: #{@movie[key]}"
     end
-
-    cell.textLabel.text = "#{movie["name"]} (#{locked})"
-    if movie['images']['poster_url'] == "http://img.dishonline.com"
-      cell.textLabel.color = :red.uicolor
-    else
-       cell.textLabel.color = :green.uicolor
-    end
-
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
+    cell.textLabel.text = "#{value}"
     cell
   end
 
@@ -103,14 +131,6 @@ class MoviesTableViewController < UITableViewController
 ## Table view delegate
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-
-    puts "selected movie -#{@movies[indexPath.row]["name"]}"
-
-    controller = SingleMovieTableViewController.alloc.init
-    controller.set_movie(@movies[indexPath.row])
-      #controller.setconfig(self.configuration_data)
-    self.navigationController.pushViewController(controller, animated:true)
-
     # Navigation logic may go here. Create and push another view controller.
     # detailViewController = DetailViewController.alloc.initWithNibName("Nib name", bundle:nil)
     # Pass the selected object to the new view controller.

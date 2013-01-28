@@ -9,6 +9,15 @@ class ShowsTableViewController < UITableViewController
     # bar for this view controller.
 
     # self.navigationItem.rightBarButtonItem = self.editButtonItem
+    @shows = []
+    Dispatch::Queue.concurrent('mc-data').async {
+      shows_string = File.read("#{App.resources_path}/shows.json")
+      @shows = BW::JSON.parse(shows_string).map do |show|
+        a = show.dup
+        a
+      end
+      view.reloadData
+    }
   end
 
   def viewDidUnload
@@ -26,18 +35,35 @@ class ShowsTableViewController < UITableViewController
 
   def numberOfSectionsInTableView(tableView)
     # Return the number of sections.
-    0
+    1
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
     # Return the number of rows in the section.
-    0
+    @shows.count
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cellIdentifier = self.class.name
     cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)
-    # Configure the cell...
+    unless cell
+        cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
+    end
+    show = @shows[indexPath.row]
+    if show['is_locked'] == true || show['is_locked'] == "true"
+      locked = "locked"
+    else
+      locked = "unlocked"
+    end
+
+    cell.textLabel.text = "#{show["name"]} (#{locked})"
+    if show['images']['poster_url'] == "http://img.dishonline.com"
+      cell.textLabel.color = UIColor.redColor
+    else
+       cell.textLabel.color = UIColor.greenColor
+    end
+
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
     cell
   end
 
@@ -79,6 +105,14 @@ class ShowsTableViewController < UITableViewController
 ## Table view delegate
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+
+    puts "selected show -#{@shows[indexPath.row]["name"]}"
+
+    controller = SingleShowTableViewController.alloc.init
+    controller.set_show(@shows[indexPath.row])
+      #controller.setconfig(self.configuration_data)
+    self.navigationController.pushViewController(controller, animated:true)
+
     # Navigation logic may go here. Create and push another view controller.
     # detailViewController = DetailViewController.alloc.initWithNibName("Nib name", bundle:nil)
     # Pass the selected object to the new view controller.
