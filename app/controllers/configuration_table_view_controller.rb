@@ -13,6 +13,11 @@ class ConfigurationTableViewController < UITableViewController
     # self.navigationItem.rightBarButtonItem = self.editButtonItem
   end
 
+
+  def UINavigationBar.didPopItem(navigationBar, item)
+    puts "POPPED ITEM"
+  end
+
   def viewDidUnload
     super
 

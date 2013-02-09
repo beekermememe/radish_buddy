@@ -1,8 +1,7 @@
 class MenuTableViewController < UITableViewController
-  attr_accessor :configuration_data
+  attr_accessor :configuration_data, :afc_client_set
   def viewDidLoad
     super
-    @configuration_data = {}
     # Uncomment the following line to preserve selection between presentations.
 
     # self.clearsSelectionOnViewWillAppear = false
@@ -11,6 +10,18 @@ class MenuTableViewController < UITableViewController
     # bar for this view controller.
 
     # self.navigationItem.rightBarButtonItem = self.editButtonItem
+    puts "Loaded Menu"
+    if $config[:username].nil? || $config[:username] == "" || $config[:server_url].nil? || $config[:server_url] == ""
+      @afc_client = false
+      #nil the client for AFNetworking
+    else
+      @afc_client = true
+      AFMotion::Client.build_shared($config[:server_url]) do
+        header "Accept", "application/json"
+        operation :json
+      end
+      #set the client for AFNetworking
+    end
   end
 
   def viewDidUnload
@@ -22,7 +33,7 @@ class MenuTableViewController < UITableViewController
 
 
   def set_configuration_data(data)
-    @configuration_data = data
+    $config = data
     view.reloadData
   end
 
@@ -90,7 +101,7 @@ class MenuTableViewController < UITableViewController
 
 ## Table view delegate
   def alert_no_config
-    @alert_box = UIAlertView.alloc.initWithTitle("Greeting",
+    @alert_box = UIAlertView.alloc.initWithTitle("Warning",
         message:"You need to select a configuration",
         delegate: nil,
         cancelButtonTitle: "ok",
@@ -103,9 +114,12 @@ class MenuTableViewController < UITableViewController
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
 
     puts "-- #{self.configuration_data.inspect}"
+
     if Menu.items[indexPath.row][:tvc] == "ConfigurationTableViewController"
       controller = Formotion::FormableController.alloc.initWithModel(Sysconfig.new("","",self))
       self.navigationController.pushViewController(controller, animated:true)
+    elsif @afc_client == false
+      alert_no_config
     elsif Menu.items[indexPath.row][:tvc] == "MoviesTableViewController"
       controller = MoviesTableViewController.alloc.init
       #controller.setconfig(self.configuration_data)
@@ -115,13 +129,7 @@ class MenuTableViewController < UITableViewController
       #controller.setconfig(self.configuration_data)
       self.navigationController.pushViewController(controller, animated:true)
     else
-      if self.configuration_data.nil? || self.configuration_data == {}
-        alert_no_config
-      else
-        controller = MoviesTableViewController.alloc.init
-        #controller.setconfig(self.configuration_data)
-        self.navigationController.pushViewController(controller, animated:true)
-      end
+      puts "\nWarning UNHANDLED-- #{self.configuration_data.inspect}"
     end
     # Navigation logic may go here. Create and push another view controller.
     # detailViewController = DetailViewController.alloc.initWithNibName("Nib name", bundle:nil)

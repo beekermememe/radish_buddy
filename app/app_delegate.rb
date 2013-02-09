@@ -2,7 +2,7 @@ class AppDelegate
 
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-
+    $config = {}
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     tabbar = UITabBarController.alloc.init
     table_view_controller = MenuTableViewController.alloc.init

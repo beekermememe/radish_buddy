@@ -9,12 +9,7 @@ class MoviesTableViewController < UITableViewController
     # bar for this view controller.
     @movies = []
     Dispatch::Queue.concurrent('mc-data').async {
-      movies_string = File.read("#{App.resources_path}/movies.json")
-      @movies = BW::JSON.parse(movies_string).map do |movie|
-        a = movie.dup
-        a
-      end
-      view.reloadData
+      @movies = Movies.get
     }
   end
 
@@ -33,12 +28,13 @@ class MoviesTableViewController < UITableViewController
 
   def numberOfSectionsInTableView(tableView)
     # Return the number of sections.
-    1
+    1 # @movies ? @movies.count : 0
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
     # Return the number of rows in the section.
-    @movies.nil? ? 0 : @movies.count
+    @movies ? @movies.count : 0
+    #(@movies && @movies.count > 0) ? @movies[0].count : 0
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
@@ -47,6 +43,7 @@ class MoviesTableViewController < UITableViewController
     unless cell
         cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
     end
+
     movie = @movies[indexPath.row]
     if movie['is_locked'] == true || movie['is_locked'] == "true"
       locked = "locked"
