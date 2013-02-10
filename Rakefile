@@ -8,4 +8,7 @@ Bundler.require
 Motion::Project::App.setup do |app|
   # Use `rake config' to see complete project settings.
   app.name = 'radish_buddy'
+  app.pods do
+    pod 'AFNetworking'
+  end
 end

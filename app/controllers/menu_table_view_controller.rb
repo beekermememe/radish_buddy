@@ -10,18 +10,7 @@ class MenuTableViewController < UITableViewController
     # bar for this view controller.
 
     # self.navigationItem.rightBarButtonItem = self.editButtonItem
-    puts "Loaded Menu"
-    if $config[:username].nil? || $config[:username] == "" || $config[:server_url].nil? || $config[:server_url] == ""
-      @afc_client = false
-      #nil the client for AFNetworking
-    else
-      @afc_client = true
-      AFMotion::Client.build_shared($config[:server_url]) do
-        header "Accept", "application/json"
-        operation :json
-      end
-      #set the client for AFNetworking
-    end
+
   end
 
   def viewDidUnload
@@ -112,8 +101,17 @@ class MenuTableViewController < UITableViewController
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-
-    puts "-- #{self.configuration_data.inspect}"
+    if $config[:username].nil? || $config[:username] == "" || $config[:server_url].nil? || $config[:server_url] == ""
+      @afc_client = false
+      #nil the client for AFNetworking
+    else
+      puts "\nusing -- #{$config[:server_url]} as base url"
+      @afc_client = true
+      AFMotion::Client.build_shared($config[:server_url]) do
+        header "Accept", "application/json"
+        operation :json
+      end
+    end
 
     if Menu.items[indexPath.row][:tvc] == "ConfigurationTableViewController"
       controller = Formotion::FormableController.alloc.initWithModel(Sysconfig.new("","",self))

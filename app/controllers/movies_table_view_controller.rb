@@ -9,7 +9,9 @@ class MoviesTableViewController < UITableViewController
     # bar for this view controller.
     @movies = []
     Dispatch::Queue.concurrent('mc-data').async {
-      @movies = Movies.get
+      Movies.get do |mvs|
+        updatemovies(mvs)
+      end
     }
   end
 
@@ -18,6 +20,11 @@ class MoviesTableViewController < UITableViewController
 
     # Release any retained subviews of the main view.
     # e.g. self.myOutlet = nil
+  end
+
+  def updatemovies(mvs)
+    @movies = mvs
+    view.reloadData
   end
 
   def shouldAutorotateToInterfaceOrientation(interfaceOrientation)

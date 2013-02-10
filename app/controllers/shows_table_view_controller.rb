@@ -11,12 +11,9 @@ class ShowsTableViewController < UITableViewController
     # self.navigationItem.rightBarButtonItem = self.editButtonItem
     @shows = []
     Dispatch::Queue.concurrent('mc-data').async {
-      shows_string = File.read("#{App.resources_path}/shows.json")
-      @shows = BW::JSON.parse(shows_string).map do |show|
-        a = show.dup
-        a
+      Shows.get do |shs|
+        updateshows(shs)
       end
-      view.reloadData
     }
   end
 
@@ -32,6 +29,11 @@ class ShowsTableViewController < UITableViewController
   end
 
 ## Table view data source
+
+  def updateshows(shs)
+    @shows = shs
+    view.reloadData
+  end
 
   def numberOfSectionsInTableView(tableView)
     # Return the number of sections.

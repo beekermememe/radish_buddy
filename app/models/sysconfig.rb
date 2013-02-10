@@ -20,50 +20,8 @@ class Sysconfig
     @username = username
     @user_uuid = nil
     @user_slingid = nil
-    self.set_user(username)
     @server = server
     self
-  end
-
-  def set_user(username)
-    userinfo = nil
-    user_list.each do |userdata|
-      if userdata[:username] == username
-        userinfo = userdata
-        break
-      end
-    end
-    unless userinfo.nil?
-      self.username = username
-      self.user_uuid = userinfo[:uuid]
-      self.user_slingid = userinfo[:slingid]
-    end
-    self
-  end
-
-  def user_list
-    {
-      "Lab_Full_Qa" => {
-        username: "Lab_Full_Qa",
-        sling_id: "",
-        uuid: ""
-      },
-      "Lab_Medium_Qa" => {
-        username: "Lab_Medium_Qa",
-        sling_id: "",
-        uuid: ""
-      },
-      "Lab_Low_Qa" => {
-        username: "Lab_Low_Qa",
-        sling_id: "",
-        uuid: ""
-      },
-      "Hunter" => {
-        username: "Hunter",
-        sling_id: "",
-        uuid: ""
-      }
-    ]
   end
 
 private
@@ -74,11 +32,36 @@ end
 module Formotion
   module RowType
     class PickerRow < StringRow
+
       def pickerView(pickerView, didSelectRow:index, inComponent:component)
-        if update_text_field(value_for_name_index(index).include?("http"))
-          $config(:server_url) = value_for_name_index(index)
+        user_list = {
+          "Lab_Full_Qa" => {
+            username: "Lab_Full_Qa",
+            sling_id: "",
+            uuid: ""
+          },
+          "Lab_Medium_Qa" => {
+            username: "Lab_Medium_Qa",
+            sling_id: "",
+            uuid: ""
+          },
+          "Lab_Low_Qa" => {
+            username: "Lab_Low_Qa",
+            sling_id: "",
+            uuid: ""
+          },
+          "Hunter" => {
+            username: "Hunter",
+            sling_id: "",
+            uuid: ""
+          }
+        }
+        puts "cfg - #{$config}|"
+        if value_for_name_index(index).include?("http")
+          $config[:server_url]= value_for_name_index(index)
         else
-          userdetails = user_list[value_for_name_index(index)]
+          puts "#{value_for_name_index(index)} - #{user_list[value_for_name_index(index)]}"
+          userdetails = user_list[value_for_name_index(index)] rescue {}
           $config[:username] =  userdetails[:username]
           $config[:sling_id] =  userdetails[:sling_id]
           $config[:uuid] =  userdetails[:uuid]

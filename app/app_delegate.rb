@@ -2,7 +2,8 @@ class AppDelegate
 
 
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-    $config = {}
+    set_default_configuration
+
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     tabbar = UITabBarController.alloc.init
     table_view_controller = MenuTableViewController.alloc.init
@@ -10,6 +11,10 @@ class AppDelegate
     @window.rootViewController = UINavigationController.alloc.initWithRootViewController(table_view_controller)
     @window.makeKeyAndVisible
     true
+  end
+
+  def set_default_configuration
+    $config = {:username=>"Lab_Full_Qa", :sling_id=>"", :uuid=>"", :server_url=>"http://www.dishanywhere.com/radish/"}
   end
 
   def applicationWillResignActive(application)
