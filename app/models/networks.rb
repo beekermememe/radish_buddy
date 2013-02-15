@@ -1,19 +1,19 @@
-class Movies
+class Networks
 
   def initialize(config)
 
   end
 
   def self.get(&callback)
-    AFMotion::Client.shared.get("/v20/dol/movies.json", { uuid: $config[:uuid], totalItems: 30, nkey: Time.now.to_i}) do |result|
+    AFMotion::Client.shared.get("/v20/dol/networks.json", { uuid: $config[:uuid], totalItems: 30, nkey: Time.now.to_i }) do |result|
       if result.success?
         puts "\n -- #{result.object.count}\n first = #{result.object.first}| \n last = #{result.object.last}|\n"
-        movies = result.object["movies"]
-        callback.call(movies)
+        networks = result.object
+        callback.call(networks)
       else
        #something went wrong
         puts "No shared client set or #{result.inspect} or #{result.error.localizedDescription}!"
-        movies = []
+        networks = []
         raise result.error.localizedDescription
       end
     end

@@ -1,4 +1,4 @@
-class NetworksTableViewController < UITableViewController
+class ShowsTableViewController < UITableViewController
   def viewDidLoad
     super
     # Uncomment the following line to preserve selection between presentations.
@@ -9,6 +9,12 @@ class NetworksTableViewController < UITableViewController
     # bar for this view controller.
 
     # self.navigationItem.rightBarButtonItem = self.editButtonItem
+    @networks = []
+    Dispatch::Queue.concurrent('mc-data').async {
+      Networks.get do |nws|
+        updatenetworks(nws)
+      end
+    }
   end
 
   def viewDidUnload
@@ -24,20 +30,42 @@ class NetworksTableViewController < UITableViewController
 
 ## Table view data source
 
+  def updatenetworks(nws)
+    @networks = nws
+    view.reloadData
+  end
+
   def numberOfSectionsInTableView(tableView)
     # Return the number of sections.
-    0
+    1
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
     # Return the number of rows in the section.
-    0
+    @shows.count
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     cellIdentifier = self.class.name
     cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)
-    # Configure the cell...
+    unless cell
+        cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
+    end
+    network = @networks[indexPath.row]
+    if network['is_locked'] == true || network['is_locked'] == "true"
+      locked = "locked"
+    else
+      locked = "unlocked"
+    end
+
+    cell.textLabel.text = "#{network["name"]} (#{locked})"
+    if network['images']['poster_url'] == "http://img.dishonline.com"
+      cell.textLabel.color = UIColor.redColor
+    else
+       cell.textLabel.color = UIColor.greenColor
+    end
+
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
     cell
   end
 
@@ -79,6 +107,14 @@ class NetworksTableViewController < UITableViewController
 ## Table view delegate
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+
+    puts "selected network -#{@networks[indexPath.row]["name"]}"
+
+    controller = SingleNetworkTableViewController.alloc.init
+    controller.set_network(@networks[indexPath.row])
+      #controller.setconfig(self.configuration_data)
+    self.navigationController.pushViewController(controller, animated:true)
+
     # Navigation logic may go here. Create and push another view controller.
     # detailViewController = DetailViewController.alloc.initWithNibName("Nib name", bundle:nil)
     # Pass the selected object to the new view controller.
