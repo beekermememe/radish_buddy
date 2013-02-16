@@ -51,7 +51,7 @@ class MoviesTableViewController < UITableViewController
         cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
     end
 
-    movie = @movies[indexPath.row]
+    movie = @movies[indexPath.row]['movie']
     if movie['is_locked'] == true || movie['is_locked'] == "true"
       locked = "locked"
     else
@@ -108,10 +108,10 @@ class MoviesTableViewController < UITableViewController
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
 
-    puts "selected movie -#{@movies[indexPath.row]["name"]}"
+    puts "selected movie -#{@movies[indexPath.row]['movie']['name']}"
 
     controller = SingleMovieTableViewController.alloc.init
-    controller.set_movie(@movies[indexPath.row])
+    controller.set_movie(@movies[indexPath.row]['movie'])
       #controller.setconfig(self.configuration_data)
     self.navigationController.pushViewController(controller, animated:true)
 

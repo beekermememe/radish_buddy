@@ -51,7 +51,7 @@ class ShowsTableViewController < UITableViewController
     unless cell
         cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
     end
-    show = @shows[indexPath.row]
+    show = @shows[indexPath.row]['show']
     if show['is_locked'] == true || show['is_locked'] == "true"
       locked = "locked"
     else
@@ -111,7 +111,7 @@ class ShowsTableViewController < UITableViewController
     puts "selected show -#{@shows[indexPath.row]["name"]}"
 
     controller = SingleShowTableViewController.alloc.init
-    controller.set_show(@shows[indexPath.row])
+    controller.set_show(@shows[indexPath.row]['show'])
       #controller.setconfig(self.configuration_data)
     self.navigationController.pushViewController(controller, animated:true)
 

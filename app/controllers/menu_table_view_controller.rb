@@ -126,6 +126,10 @@ class MenuTableViewController < UITableViewController
       controller = ShowsTableViewController.alloc.init
       #controller.setconfig(self.configuration_data)
       self.navigationController.pushViewController(controller, animated:true)
+    elsif Menu.items[indexPath.row][:tvc] == "NetworksTableViewController"
+      controller = NetworksTableViewController.alloc.init
+      #controller.setconfig(self.configuration_data)
+      self.navigationController.pushViewController(controller, animated:true)
     else
       puts "\nWarning UNHANDLED-- #{self.configuration_data.inspect}"
     end

@@ -1,4 +1,4 @@
-class NetworksTableViewController < UITableViewController
+class SingleNetworkTableViewController < UITableViewController
   def viewDidLoad
     super
     # Uncomment the following line to preserve selection between presentations.
@@ -9,12 +9,16 @@ class NetworksTableViewController < UITableViewController
     # bar for this view controller.
 
     # self.navigationItem.rightBarButtonItem = self.editButtonItem
-    @networks = []
-    Dispatch::Queue.concurrent('mc-data').async {
-      Networks.get do |nws|
-        updatenetworks(nws)
-      end
-    }
+    @network_values_to_show = [
+      "logo",
+      "is_locked",
+      "url",
+      "has_stream",
+      "banner",
+      "slug"
+    ]
+
+    self.navigationItem.title = @network.nil? ? "" : @network["name"]
   end
 
   def viewDidUnload
@@ -24,16 +28,29 @@ class NetworksTableViewController < UITableViewController
     # e.g. self.myOutlet = nil
   end
 
+
+  def has_thumbnail(thumbnail)
+    !thumbnail.nil? && (thumbnail.include?("jpg") || thumbnail.include?("png") || thumbnail.include?("gif"))
+  end
+
+  def is_locked(locked)
+    (!locked.nil? && (locked == "true" || locked == "locked"))
+  end
+
+  def is_p_locked(locked)
+    (!locked.nil? && (locked == "true" || locked == "locked"))
+  end
+
+  def set_network(network)
+    @network = network
+    view.reloadData
+  end
+
   def shouldAutorotateToInterfaceOrientation(interfaceOrientation)
     interfaceOrientation == UIInterfaceOrientationPortrait
   end
 
 ## Table view data source
-
-  def updatenetworks(nws)
-    @networks = nws
-    view.reloadData
-  end
 
   def numberOfSectionsInTableView(tableView)
     # Return the number of sections.
@@ -42,30 +59,34 @@ class NetworksTableViewController < UITableViewController
 
   def tableView(tableView, numberOfRowsInSection:section)
     # Return the number of rows in the section.
-    @networks.count
+    @network_values_to_show.nil? ? 0 : @network_values_to_show.count
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
+
+
     cellIdentifier = self.class.name
     cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)
+    # Configure the cell...
     unless cell
-        cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
+      cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
     end
-    network = @networks[indexPath.row]
-    if network['is_locked'] == true || network['is_locked'] == "true"
-      locked = "locked"
+    value = nil
+    key =  @network_values_to_show[indexPath.row]
+    if @network.nil?
+      value = ""
+    elsif key == "logo"
+      ht = has_thumbnail(@network["logo"])
+      value = "#{ht == true ? "#{@network['logo']}" : "NO LOGO"}"
+    elsif key == "is_locked"
+      lk = is_locked(@network[key])
+      value = "#{lk == true ? "LOCKED" : "UNLOCKED"}"
+    elsif @network[key].nil? || @network[key] == ""
+      value = "#{key} is blank"
     else
-      locked = "unlocked"
+      value = "#{key}: #{@network[key]}"
     end
-
-    cell.textLabel.text = "#{network["name"]} (#{locked})"
-    if network['logo'] == "http://img.dishonline.com"
-      cell.textLabel.color = UIColor.redColor
-    else
-       cell.textLabel.color = UIColor.greenColor
-    end
-
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
+    cell.textLabel.text = "#{value}"
     cell
   end
 
@@ -107,14 +128,6 @@ class NetworksTableViewController < UITableViewController
 ## Table view delegate
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-
-    puts "selected network -#{@networks[indexPath.row]["name"]}"
-
-    controller = SingleNetworkTableViewController.alloc.init
-    controller.set_network(@networks[indexPath.row])
-      #controller.setconfig(self.configuration_data)
-    self.navigationController.pushViewController(controller, animated:true)
-
     # Navigation logic may go here. Create and push another view controller.
     # detailViewController = DetailViewController.alloc.initWithNibName("Nib name", bundle:nil)
     # Pass the selected object to the new view controller.
