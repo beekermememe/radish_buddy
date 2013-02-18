@@ -50,22 +50,21 @@ class MoviesTableViewController < UITableViewController
     unless cell
         cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
     end
-
+    lock_symbol = 
     movie = @movies[indexPath.row]['movie']
     if movie['is_locked'] == true || movie['is_locked'] == "true"
-      locked = "locked"
+      locked_view = "padlock-icon-hi"
     else
-      locked = "unlocked"
+      locked_view = "unlocked"
     end
 
-    cell.textLabel.text = "#{movie["name"]} (#{locked})"
+    cell.textLabel.text = "#{movie["name"]}"
     if movie['images']['poster_url'] == "http://img.dishonline.com"
       cell.textLabel.color = :red.uicolor
     else
        cell.textLabel.color = :green.uicolor
     end
-
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
+    cell.accessoryView = locked_view
     cell
   end
 
