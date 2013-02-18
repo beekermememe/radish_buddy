@@ -128,9 +128,13 @@ class SingleNetworkTableViewController < UITableViewController
 ## Table view delegate
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
-    # Navigation logic may go here. Create and push another view controller.
-    # detailViewController = DetailViewController.alloc.initWithNibName("Nib name", bundle:nil)
-    # Pass the selected object to the new view controller.
-    # self.navigationController.pushViewController(detailViewController, animated:true)
+    if @network["logo"] != ""
+      puts "selected networks -#{@network["logo"]}"
+
+      controller = PosterViewController.alloc.init
+      controller.set_poster(@network["logo"])
+      #controller.setconfig(self.configuration_data)
+      self.navigationController.pushViewController(controller, animated:true)
+    end
   end
 end

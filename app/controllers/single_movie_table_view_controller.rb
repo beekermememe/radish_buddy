@@ -135,5 +135,13 @@ class SingleMovieTableViewController < UITableViewController
     # detailViewController = DetailViewController.alloc.initWithNibName("Nib name", bundle:nil)
     # Pass the selected object to the new view controller.
     # self.navigationController.pushViewController(detailViewController, animated:true)
+    if @movie["images"]["poster_url"] != "NO POSTER"
+      puts "selected movie -#{@movie["images"]["poster_url"]}"
+
+      controller = PosterViewController.alloc.init
+      controller.set_poster(@movie["images"]["poster_url"])
+      #controller.setconfig(self.configuration_data)
+      self.navigationController.pushViewController(controller, animated:true)
+    end
   end
 end
