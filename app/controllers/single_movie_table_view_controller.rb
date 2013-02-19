@@ -34,11 +34,11 @@ class SingleMovieTableViewController < UITableViewController
   end
 
   def is_locked(locked)
-    (!locked.nil? && (locked == "true" || locked == "locked"))
+    (!locked.nil? && (locked == "true" || locked == true))
   end
 
   def is_p_locked(locked)
-    (!locked.nil? && (locked == "true" || locked == "locked"))
+    (!locked.nil? && (locked == "true" || locked == true))
   end
 
   def set_movie(movie)
@@ -74,22 +74,27 @@ class SingleMovieTableViewController < UITableViewController
     value = nil
     key =  @movie_values_to_show[indexPath.row]
     if @movie.nil?
-      value = ""
+      cell.textLabel.text = ""
     elsif key == "poster_url"
       ht = has_thumbnail(@movie["images"]["poster_url"])
-      value = "#{ht == true ? "#{@movie['images']['poster_url']}" : "NO POSTER"}"
+      if ht
+        img = "#{@movie["images"]["poster_url"]}".uiimage
+        img_v = UIImageView.alloc.initWithImage(img)
+        cell.imageView.image = img
+      else
+        cell.textLabel.text = "No Poster Image Boooo"
+      end
     elsif key == "is_locked"
       lk = is_locked(@movie[key])
-      value = "#{lk == true ? "LOCKED" : "UNLOCKED"}"
-    elsif key == "is_parental_locked"
+      txt = "#{lk == true ? "LOCKED" : "UNLOCKED"}"
       lk = is_p_locked(@movie[key])
-      value = "#{lk == true ? "PARENTAL LOCKED" : "PARENTAL UNLOCKED"}"
+      ptx = "#{lk == true ? "PARENTAL LOCKED" : "PARENTAL UNLOCKED"}"
+      cell.textLabel.text = "#{txt}/#{ptx}"
     elsif @movie[key].nil? || @movie[key] == ""
-      value = "#{key} is blank"
+      cell.textLabel.text = "#{key} is blank"
     else
-      value = "#{key}: #{@movie[key]}"
+      cell.textLabel.text = "#{key}: #{@movie[key]}"
     end
-    cell.textLabel.text = "#{value}"
     cell
   end
 

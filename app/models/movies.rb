@@ -13,6 +13,7 @@ class Movies
         callback.call(movies)
       else
        #something went wrong
+        puts "\n |--| #{result.object}"
         puts "No shared client set or \n#{result.inspect}\n or #{result.error.localizedDescription}!"
         movies = []
         raise result.error.localizedDescription

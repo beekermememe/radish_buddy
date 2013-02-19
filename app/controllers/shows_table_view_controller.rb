@@ -53,19 +53,19 @@ class ShowsTableViewController < UITableViewController
     end
     show = @shows[indexPath.row]['show']
     if show['is_locked'] == true || show['is_locked'] == "true"
-      locked = "locked"
+      locked_view = "padlock-icon-hi".uiimage
     else
-      locked = "unlocked"
+      locked_view = "unlocked".uiimage
     end
 
-    cell.textLabel.text = "#{show["name"]} (#{locked})"
+    cell.textLabel.text = "#{show["name"]}"
     if show['images']['poster_url'] == "http://img.dishonline.com"
       cell.textLabel.color = UIColor.redColor
     else
        cell.textLabel.color = UIColor.greenColor
     end
 
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
+    cell.accessoryView = UIImageView.alloc.initWithImage(locked_view)
     cell
   end
 
@@ -110,7 +110,7 @@ class ShowsTableViewController < UITableViewController
 
     puts "selected show -#{@shows[indexPath.row]["name"]}"
 
-    controller = SingleShowTableViewController.alloc.init
+    controller = SingleShowViewController.alloc.init
     controller.set_show(@shows[indexPath.row]['show'])
       #controller.setconfig(self.configuration_data)
     self.navigationController.pushViewController(controller, animated:true)

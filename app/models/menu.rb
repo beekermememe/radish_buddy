@@ -3,10 +3,6 @@ class Menu
   def self.items
     [
       {
-        name: "Configure System",
-        tvc: "ConfigurationTableViewController"
-      },
-      {
         name: "Movies",
         tvc: "MoviesTableViewController"
       },
@@ -18,7 +14,6 @@ class Menu
         name: "Networks",
         tvc: "NetworksTableViewController"
       }
-
     ]
   end
 

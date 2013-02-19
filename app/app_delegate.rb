@@ -1,22 +1,21 @@
 class AppDelegate
-
-
   def application(application, didFinishLaunchingWithOptions:launchOptions)
     set_default_configuration
-
     @window = UIWindow.alloc.initWithFrame(UIScreen.mainScreen.bounds)
     tabbar = UITabBarController.alloc.init
-    table_view_controller = MenuTableViewController.alloc.init
-    #tabbar.title = NSBundle.mainBundle.infoDictionary["CFBundleName"]
-    @window.rootViewController = UINavigationController.alloc.initWithRootViewController(table_view_controller)
+    first_view_controller = MenuTableViewController.alloc.init
+    controller = Formotion::FormableController.alloc.initWithModel(Sysconfig.new("","",self))
+    second_view_controller = controller
+    tabbar.viewControllers = [first_view_controller, second_view_controller]
+    tabbar.title = NSBundle.mainBundle.infoDictionary["CFBundleName"]
+    @window.rootViewController = UINavigationController.alloc.initWithRootViewController(tabbar)
     @window.makeKeyAndVisible
     true
   end
 
   def set_default_configuration
-    $config = {:username=>"Lab_Full_Qa", :sling_id=>"", :uuid=>"", :server_url=>"http://www.dishanywhere.com/radish/"}
+    $config = {:username=>"Lab_Full_Qa", :sling_id=>"", :uuid=>"d", :server_url=>"http://radish.dishanywhere.com/"}
   end
-
   def applicationWillResignActive(application)
     # Sent when the application is about to move from active to inactive state. This can occur for certain types of
     # temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application

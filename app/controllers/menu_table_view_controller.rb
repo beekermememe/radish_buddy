@@ -113,10 +113,7 @@ class MenuTableViewController < UITableViewController
       end
     end
 
-    if Menu.items[indexPath.row][:tvc] == "ConfigurationTableViewController"
-      controller = Formotion::FormableController.alloc.initWithModel(Sysconfig.new("","",self))
-      self.navigationController.pushViewController(controller, animated:true)
-    elsif @afc_client == false
+    if @afc_client == false
       alert_no_config
     elsif Menu.items[indexPath.row][:tvc] == "MoviesTableViewController"
       controller = MoviesTableViewController.alloc.init

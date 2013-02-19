@@ -53,19 +53,18 @@ class NetworksTableViewController < UITableViewController
     end
     network = @networks[indexPath.row]
     if network['is_locked'] == true || network['is_locked'] == "true"
-      locked = "locked"
+      locked_view = "padlock-icon-hi".uiimage
     else
-      locked = "unlocked"
+      locked_view = "unlocked".uiimage
     end
 
-    cell.textLabel.text = "#{network["name"]} (#{locked})"
+    cell.textLabel.text = "#{network["name"]}"
     if network['logo'] == "http://img.dishonline.com"
       cell.textLabel.color = UIColor.redColor
     else
        cell.textLabel.color = UIColor.greenColor
     end
-
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
+    cell.accessoryView = UIImageView.alloc.initWithImage(locked_view)
     cell
   end
 

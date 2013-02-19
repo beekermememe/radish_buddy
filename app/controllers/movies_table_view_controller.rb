@@ -50,21 +50,20 @@ class MoviesTableViewController < UITableViewController
     unless cell
         cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
     end
-    lock_symbol = 
     movie = @movies[indexPath.row]['movie']
     if movie['is_locked'] == true || movie['is_locked'] == "true"
-      locked_view = "padlock-icon-hi"
+      locked_view = "padlock-icon-hi".uiimage
     else
-      locked_view = "unlocked"
+      locked_view = "unlocked".uiimage
     end
-
-    cell.textLabel.text = "#{movie["name"]}"
+    networks = movie["networks"].map {|n| n["name"]}.join(",")
+    cell.textLabel.text = "#{movie["name"]} (#{networks})"
     if movie['images']['poster_url'] == "http://img.dishonline.com"
       cell.textLabel.color = :red.uicolor
     else
-       cell.textLabel.color = :green.uicolor
+      cell.textLabel.color = :green.uicolor
     end
-    cell.accessoryView = locked_view
+    cell.accessoryView = UIImageView.alloc.initWithImage(locked_view)
     cell
   end
 
@@ -109,11 +108,14 @@ class MoviesTableViewController < UITableViewController
 
     puts "selected movie -#{@movies[indexPath.row]['movie']['name']}"
 
-    controller = SingleMovieTableViewController.alloc.init
-    controller.set_movie(@movies[indexPath.row]['movie'])
+    #controller = SingleMovieTableViewController.alloc.init
+    #controller.set_movie(@movies[indexPath.row]['movie'])
       #controller.setconfig(self.configuration_data)
-    self.navigationController.pushViewController(controller, animated:true)
+    #self.navigationController.pushViewController(controller, animated:true)
 
+    controller = SingleMovieViewController.alloc.init
+    controller.set_movie(@movies[indexPath.row]['movie'])
+    self.navigationController.pushViewController(controller, animated:true)
     # Navigation logic may go here. Create and push another view controller.
     # detailViewController = DetailViewController.alloc.initWithNibName("Nib name", bundle:nil)
     # Pass the selected object to the new view controller.

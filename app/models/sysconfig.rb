@@ -15,12 +15,7 @@ class Sysconfig
     ]
   form_title "Select User and Radish Server"
 
-  def initialize(username,server,source)
-    @root_config_holder = source
-    @username = username
-    @user_uuid = nil
-    @user_slingid = nil
-    @server = server
+  def initialize(username = "" ,server = "",source = nil)
     self
   end
 
@@ -60,7 +55,6 @@ module Formotion
         if value_for_name_index(index).include?("http")
           $config[:server_url]= value_for_name_index(index)
         else
-          puts "#{value_for_name_index(index)} - #{user_list[value_for_name_index(index)]}"
           userdetails = user_list[value_for_name_index(index)] rescue {}
           $config[:username] =  userdetails[:username]
           $config[:sling_id] =  userdetails[:sling_id]
