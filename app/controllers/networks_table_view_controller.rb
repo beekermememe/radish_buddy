@@ -109,7 +109,7 @@ class NetworksTableViewController < UITableViewController
 
     puts "selected network -#{@networks[indexPath.row]["name"]}"
 
-    controller = SingleNetworkTableViewController.alloc.init
+    controller = SingleNetworkViewController.alloc.init
     controller.set_network(@networks[indexPath.row])
       #controller.setconfig(self.configuration_data)
     self.navigationController.pushViewController(controller, animated:true)

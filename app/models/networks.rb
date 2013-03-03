@@ -5,7 +5,7 @@ class Networks
   end
 
   def self.get(&callback)
-    AFMotion::Client.shared.get("/v20/dol/networks.json", { uuid: $config[:uuid], totalItems: 30, nkey: Time.now.to_i }) do |result|
+    AFMotion::Client.shared.get("/v20/dol/networks.json", { uuid: $config[:uuid], totalItems: 150, nkey: Time.now.to_i }) do |result|
       if result.success?
         puts "\n -- #{result.object.count}\n first = #{result.object.first}| \n last = #{result.object.last}|\n"
         networks = result.object

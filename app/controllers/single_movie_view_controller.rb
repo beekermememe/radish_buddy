@@ -31,7 +31,10 @@ class SingleMovieViewController < UIViewController
   def setup_networks_label
     if @movie
       lbl = UILabel.alloc.initWithFrame([[0, 20], [320, 39]])
-      lbl.text = @movie["networks"].map{|n| n["name"]}.join(",")
+      network = @movie["networks"].map{|n| n["name"]}.join(",")
+      rating = @movie['rating'].to_s == "" ? "No rating" : @movie['rating']
+      details = "#{network} - #{rating}"
+      lbl.text = details
       view << lbl
     end
   end

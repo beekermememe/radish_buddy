@@ -116,16 +116,13 @@ class MenuTableViewController < UITableViewController
     if @afc_client == false
       alert_no_config
     elsif Menu.items[indexPath.row][:tvc] == "MoviesTableViewController"
-      controller = MoviesTableViewController.alloc.init
-      #controller.setconfig(self.configuration_data)
+      controller = AllMoviesViewController.alloc.init
       self.navigationController.pushViewController(controller, animated:true)
     elsif Menu.items[indexPath.row][:tvc] == "ShowsTableViewController"
-      controller = ShowsTableViewController.alloc.init
-      #controller.setconfig(self.configuration_data)
+      controller = AllShowsViewController.alloc.init
       self.navigationController.pushViewController(controller, animated:true)
     elsif Menu.items[indexPath.row][:tvc] == "NetworksTableViewController"
       controller = NetworksTableViewController.alloc.init
-      #controller.setconfig(self.configuration_data)
       self.navigationController.pushViewController(controller, animated:true)
     else
       puts "\nWarning UNHANDLED-- #{self.configuration_data.inspect}"
