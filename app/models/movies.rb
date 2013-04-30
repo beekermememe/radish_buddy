@@ -5,7 +5,7 @@ class Movies
   end
 
   def self.get(&callback)
-    AFMotion::Client.shared.get("/v20/dol/movies.json", { uuid: $config[:uuid], totalItems: 150, nkey: Time.now.to_i}) do |result|
+    AFMotion::Client.shared.get("v20/dol/movies.json", { uuid: $config[:uuid], totalItems: 150, nkey: Time.now.to_i}) do |result|
       if result.success?
         puts "\n |--| #{result.object}"
         puts "\n -- #{result.object["movies"].count}\n first = #{result.object["movies"].first}| \n last = #{result.object["movies"].last}|\n"

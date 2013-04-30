@@ -121,4 +121,9 @@ class MoviesTableViewController < UITableViewController
     # Pass the selected object to the new view controller.
     # self.navigationController.pushViewController(detailViewController, animated:true)
   end
+
+  def resize_movie_image(image_path)
+
+
+  end
 end

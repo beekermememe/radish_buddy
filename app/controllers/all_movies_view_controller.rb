@@ -22,7 +22,7 @@ class AllMoviesViewController < UIViewController
 
   def setup_poster(movie,x_start)
     if !movie["images"].nil? && !movie["images"]["poster_url"].nil?
-      img_v = UIImageView.alloc.initWithFrame([[x_start, 100], [320, 480]])
+      img_v = UIImageView.alloc.initWithFrame([[x_start, 100], [170, 240]])
       img_v.url =  movie["images"]["poster_url"]
       @scroll_view << img_v
     end
