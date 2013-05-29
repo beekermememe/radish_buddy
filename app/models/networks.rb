@@ -1,13 +1,16 @@
 class Networks
 
-  def initialize(config)
-
+  def initialize(start_page = 1, items_per_page = 20, uuid = "B5BE587F67D656C5E0441CC1DE313A0C")
+    @start_page = start_page
+    @items_per_page = items_per_page
+    @uuid = uuid
   end
 
-  def self.get(&callback)
-    AFMotion::Client.shared.get("/v20/dol/networks.json", { uuid: $config[:uuid], totalItems: 400, nkey: Time.now.to_i }) do |result|
+  def get(&callback)
+    itemstart = (@start_page*@items_per_page) + 1
+    AFMotion::Client.shared.get("v20/dol/networks.json", { uuid: @uuid, itemStart: itemstart, totalItems: @items_per_page, nkey: Time.now.to_i }) do |result|
       if result.success?
-        puts "\n -- #{result.object.count}\n first = #{result.object.first}| \n last = #{result.object.last}|\n"
+        puts "\n -- #{result.object.count}\n first = #{result.object}| \n last = #{result.object.last}|\n"
         networks = result.object
         callback.call(networks)
       else

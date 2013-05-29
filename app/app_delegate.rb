@@ -14,7 +14,7 @@ class AppDelegate
   end
 
   def set_default_configuration
-    $config = {:username=>"Lab_Full_Qa", :sling_id=>"", :uuid=>"d", :server_url=>"http://radish.dishanywhere.com"}
+    $config = {:username=>"Lab_Full_Qa", :sling_id=>"", :uuid=>"B5BE587F67D656C5E0441CC1DE313A0C", :server_url=>"http://radish.dishanywhere.com"}
   end
   def applicationWillResignActive(application)
     # Sent when the application is about to move from active to inactive state. This can occur for certain types of

@@ -1,12 +1,13 @@
 class AllNetworksViewController < UIViewController
   def viewDidLoad
     super
+    @page ||= 0
+    @items_per_page ||= 20
     @networks = []
-#    Dispatch::Queue.concurrent('mc-data').async {
-    Networks.get do |nws|
+    @networks_initiator = Networks.new(@page, @items_per_page)
+    @networks_initiator.get do |nws|
       update_networks(nws)
     end
-#    }
   end
 
   def scrollViewDidScroll(scroll_view)
@@ -60,6 +61,19 @@ class AllNetworksViewController < UIViewController
     setup_networks_label(network,x_start_index)
   end
 
+  def add_more_view(index)
+    x_start_index = index*320
+    setup_more_button(x_start_index)
+  end
+
+  def setup_more_button(x_start)
+    lbl = UILabel.alloc.initWithFrame([[x_start+100, 220], [320, 39]])
+    details = "MORE >>>>>>>"
+    lbl.text = details
+    @scroll_view << lbl
+
+  end
+
   def add_scroll_view(number_of_pages)
     @scroll_view = UIScrollView.alloc.initWithFrame([[0,0], [320,480]])
     @scroll_view.contentSize = CGSizeMake(320*number_of_pages, 480)
@@ -88,5 +102,6 @@ class AllNetworksViewController < UIViewController
       add_network_view(network,index, index+1, total)
       index += 1
     end
+    #add_more_view(index)
   end
 end

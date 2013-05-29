@@ -1,14 +1,13 @@
-class AllShowsViewController < UIViewController
+class WhatsHotViewController  < UIViewController
   def viewDidLoad
     super
     @page ||= 0
     @items_per_page ||= 20
     @show = []
-    @shows_initiator = Shows.new(@page, @items_per_page)
-    @shows_initiator.get do |shs|
-      update_shows(shs)
+    @whatshot_initiator = WhatsHot.new(@page, @items_per_page)
+    @whatshot_initiator.get do |hot|
+      update_whatshot(hot)
     end
-
   end
 
   def scrollViewDidScroll(scroll_view)
@@ -17,15 +16,15 @@ class AllShowsViewController < UIViewController
     @page_control.currentPage = page
   end
 
-  def update_shows(shs)
-    @shows = shs
-    set_shows(@shows)
+  def update_whatshot(whot)
+    whats_hot = whot
+    set_whats_hot(whats_hot)
   end
 
   def setup_poster(show,x_start)
-    if !show["images"].nil? && !show["images"]["poster_url"].nil?
+    if !show["program_image"].nil?
       img_v = UIImageView.alloc.initWithFrame([[x_start, 100], [170, 240]])
-      img_v.url =  show["images"]["poster_url"]
+      img_v.url =  show["program_image"]
       @scroll_view << img_v
     end
   end
@@ -41,9 +40,9 @@ class AllShowsViewController < UIViewController
   def setup_networks_label(show,x_start)
     if show
       lbl = UILabel.alloc.initWithFrame([[x_start, 20], [320, 39]])
-      network = show["networks"].map{|n| n["name"]}.join(",")
-      rating = show['rating'].to_s == "" ? "No rating" : show['rating']
-      details = "#{network} - #{rating}"
+      network = show["network_id"]
+      flame_level = show['flame_level'].to_s == "" ? "No flame level" : show['flame_level']
+      details = "#{network} - #{flame_level}"
       lbl.text = details
       @scroll_view << lbl
     end
@@ -69,18 +68,18 @@ class AllShowsViewController < UIViewController
     @page_control.numberOfPages = number_of_pages
     view << @page_control
   end
-  def set_shows(shows)
-    add_scroll_view(shows.count)
-    add_page_control(shows.count)
+  def set_whats_hot(whats_hot)
+    add_scroll_view(whats_hot.count)
+    add_page_control(whats_hot.count)
 
-    @shows = shows
-    populate_posters(@shows)
+    @whats_hot = whats_hot
+    populate_posters(@whats_hot)
   end
 
   def populate_posters(shows)
     index = 0
     shows.each do |show|
-      add_show_view(show["show"],index,shows.count)
+      add_show_view(show,index,shows.count)
       index += 1
     end
   end

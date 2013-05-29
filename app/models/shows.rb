@@ -1,11 +1,14 @@
 class Shows
 
-  def initialize(config)
-
+  def initialize(start_page = 1, items_per_page = 20, uuid = "B5BE587F67D656C5E0441CC1DE313A0C")
+    @start_page = start_page
+    @items_per_page = items_per_page
+    @uuid = uuid
   end
 
-  def self.get(&callback)
-    AFMotion::Client.shared.get("/v20/dol/shows.json", { uuid: $config[:uuid], totalItems: 150, nkey: Time.now.to_i }) do |result|
+  def get(&callback)
+    itemstart = (@start_page*@items_per_page) + 1
+    AFMotion::Client.shared.get("v20/dol/shows.json", { uuid: @uuid, itemStart: itemstart, totalItems:  @items_per_page, nkey: Time.now.to_i }) do |result|
       if result.success?
         puts "\n -- #{result.object["shows"].count}\n first = #{result.object["shows"].first}| \n last = #{result.object["shows"].last}|\n"
         shows = result.object["shows"]

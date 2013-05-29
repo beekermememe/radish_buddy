@@ -105,7 +105,7 @@ class MenuTableViewController < UITableViewController
       @afc_client = false
       #nil the client for AFNetworking
     else
-      puts "\nusing -- #{$config[:server_url]} as base url"
+      puts "\nusing -- #{$config[:server_url]} as base url, #{$config[:uuid]} - #{$config[:username]}"
       @afc_client = true
       AFMotion::Client.build_shared($config[:server_url]) do
         header "Accept", "application/json"
@@ -123,6 +123,9 @@ class MenuTableViewController < UITableViewController
       self.navigationController.pushViewController(controller, animated:true)
     elsif Menu.items[indexPath.row][:tvc] == "NetworksTableViewController"
       controller = AllNetworksViewController.alloc.init
+      self.navigationController.pushViewController(controller, animated:true)
+    elsif Menu.items[indexPath.row][:tvc] == "WhatsHotTableViewController"
+      controller = WhatsHotViewController.alloc.init
       self.navigationController.pushViewController(controller, animated:true)
     else
       puts "\nWarning UNHANDLED-- #{self.configuration_data.inspect}"

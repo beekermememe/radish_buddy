@@ -2,7 +2,7 @@
 source "https://rubygems.org"
 
 gem "rubymotion_generators"
-gem "bubble-wrap","~> 1.1.4"
+gem "bubble-wrap"
 gem "afmotion"
 gem 'formotion'
 gem 'sugarcube'

@@ -1,12 +1,12 @@
 class AllMoviesViewController < UIViewController
   def viewDidLoad
-    super
+    @page ||= 0
+    @items_per_page ||= 20
     @movies = []
-#    Dispatch::Queue.concurrent('mc-data').async {
-      Movies.get do |mvs|
-        update_movies(mvs)
-      end
-#    }
+    @movies_initiator = Movies.new(@page, @items_per_page)
+    @movies_initiator.get do |mvs|
+      update_movies(mvs)
+    end
   end
 
   def scrollViewDidScroll(scroll_view)
@@ -28,10 +28,10 @@ class AllMoviesViewController < UIViewController
     end
   end
 
-  def setup_name_label(movie,x_start)
+  def setup_name_label(movie,x_start, total_movies_count)
     if movie
       lbl = UILabel.alloc.initWithFrame([[x_start, 0], [320, 19]])
-      lbl.text = movie["name"]
+      lbl.text = movie["name"] + " (#{(x_start/320)+1} of #{total_movies_count})"
       @scroll_view << lbl
     end
   end
@@ -47,10 +47,10 @@ class AllMoviesViewController < UIViewController
     end
   end
 
-  def add_movie_view(movie,index)
+  def add_movie_view(movie,index,total_movies_count)
     x_start_index = index*320
     setup_poster(movie,x_start_index)
-    setup_name_label(movie,x_start_index)
+    setup_name_label(movie,x_start_index,total_movies_count)
     setup_networks_label(movie,x_start_index)
   end
 
@@ -78,7 +78,7 @@ class AllMoviesViewController < UIViewController
   def populate_posters(movies)
     index = 0
     movies.each do |movie|
-      add_movie_view(movie["movie"],index)
+      add_movie_view(movie["movie"],index,movies.count)
       index += 1
     end
   end

@@ -2,7 +2,7 @@ class Sysconfig
   include Formotion::Formable
   attr_accessor :username, :user_uuid, :user_slingid, :server
 
-  form_property :username, :picker_with_done, title: "Account", items: ["Lab_Full_Qa", "Lab_Medium_Qa", "Lab_Low_Qa", "Hunter"]
+  form_property :username, :picker_with_done, title: "Account", items: ["Lab_Full_Qa", "Lab_Medium_Qa", "Lab_Low_Qa", "Hunter", "Julie"]
   form_property :server, :picker_with_done, title: "Radish Server", items: [
       "http://www.dishanywhere.com/radish/",
       "http://radish.dishanywhere.com/",
@@ -63,23 +63,29 @@ module Formotion
           "Lab_Full_Qa" => {
             username: "Lab_Full_Qa",
             sling_id: "",
-            uuid: ""
+            uuid: "B5BE587F67D656C5E0441CC1DE313A0C"
           },
           "Lab_Medium_Qa" => {
             username: "Lab_Medium_Qa",
             sling_id: "",
-            uuid: ""
+            uuid: "B5C63A0E29826D80E0441CC1DE313A0C"
           },
           "Lab_Low_Qa" => {
             username: "Lab_Low_Qa",
             sling_id: "",
-            uuid: ""
+            uuid: "BA7BFFE853B92757E0441CC1DE313A0C"
           },
           "Hunter" => {
             username: "Hunter",
             sling_id: "",
-            uuid: ""
+            uuid: "AB6A5531052A0E91E0441CC1DE313A0C"
+          },
+          "Julie" => {
+              username: "Julie",
+              sling_id: "",
+              uuid: "A183EB0B0BC02880E044001A4B0AA2BC"
           }
+
         }
         puts "cfg - #{$config}|"
         if value_for_name_index(index).include?("http")

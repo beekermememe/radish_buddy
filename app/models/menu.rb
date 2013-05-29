@@ -13,6 +13,10 @@ class Menu
       {
         name: "Networks",
         tvc: "NetworksTableViewController"
+      },
+      {
+          name: "WhatsHot",
+          tvc: "WhatsHotTableViewController"
       }
     ]
   end
