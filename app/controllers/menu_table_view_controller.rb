@@ -127,6 +127,9 @@ class MenuTableViewController < UITableViewController
     elsif Menu.items[indexPath.row][:tvc] == "WhatsHotTableViewController"
       controller = WhatsHotViewController.alloc.init
       self.navigationController.pushViewController(controller, animated:true)
+    elsif Menu.items[indexPath.row][:tvc] == "UserDetailsTableViewController"
+      controller = UserInfoViewController.alloc.init
+      self.navigationController.pushViewController(controller, animated:true)
     else
       puts "\nWarning UNHANDLED-- #{self.configuration_data.inspect}"
     end

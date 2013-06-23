@@ -17,6 +17,10 @@ class Menu
       {
           name: "WhatsHot",
           tvc: "WhatsHotTableViewController"
+      },
+      {
+          name: "UserInfo",
+          tvc: "UserDetailsTableViewController"
       }
     ]
   end

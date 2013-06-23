@@ -4,7 +4,6 @@ class WhatsHot
     @items_per_page = items_per_page
     @uuid = uuid
   end
-
   def get(&callback)
     itemstart = (@start_page*@items_per_page) + 1
 
