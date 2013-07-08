@@ -87,6 +87,7 @@ class AllNetworksViewController < UIViewController
     @page_control.numberOfPages = number_of_pages
     view << @page_control
   end
+
   def set_networks(networks)
     add_scroll_view(networks.count)
     add_page_control(networks.count)

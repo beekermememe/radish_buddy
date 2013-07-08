@@ -10,6 +10,7 @@ class UserDevicesViewController < UITableViewController
       create_device(device,count)
       count += 1
     end
+    view
   end
 
   def viewDidUnload
@@ -40,9 +41,22 @@ class UserDevicesViewController < UITableViewController
     unless cell
       cell = UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: cellIdentifier)
     end
-    cell.textLabel.text = @devices[indexPath.row][0]
+
+    cell.textLabel.text = determine_cell_type(@devices[indexPath.row].key,@devices[indexPath.row][:key].value)
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
     cell
+  end
+
+  def determine_cell_type(data_name,data_value)
+    if data_type == 'uuid'
+      "UUID"
+    elsif data_type == 'devices'
+      "DEVICES (#{data_value.count})"
+    elsif data_type == 'unlocked_network_ids'
+      "IDS OF UNLOCKED NETWORKS"
+    else
+      nil
+    end
   end
 
   def device_data(device,number)
