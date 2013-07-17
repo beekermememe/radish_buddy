@@ -126,7 +126,7 @@ class UserInfoViewController  < UITableViewController
 ## Table view delegate
   def sub_view_controllers
     [
-        DevicesDataViewController,
+        UserParentalControlsViewController,
         SummaryDataViewController,
         DevicesDataViewController
     ]
